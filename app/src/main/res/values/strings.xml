@@ -1,0 +1,16 @@
+<resources>
+    <string name="app_name">My First Application</string>
+    <string name="title">Choose what to allow the APP to access</string>
+    <string name="storage">Storage</string>
+    <string name="storage_description">access photos, media, and files on your device</string>
+    <string name="location">Location</string>
+    <string name="location_description">access the device location</string>
+    <string name="camera">Camera</string>
+    <string name="camera_description">take pictures and record videos</string>
+    <string name="phone">Phone</string>
+    <string name="phone_description">make and manage phone calls</string>
+    <string name="contact">Contact</string>
+    <string name="contact_description">access your contacts</string>
+    <string name="cancel">Cancel</string>
+    <string name="continue_lbl">Continue</string>
+</resources>
