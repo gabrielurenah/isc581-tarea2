@@ -7,6 +7,7 @@
     tools:context=".PermissionsActivity">
 
     <LinearLayout
+        android:id="@+id/actions_layout"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="vertical"
@@ -14,6 +15,7 @@
         android:gravity="center"
         android:layout_alignParentTop="true">
         <TextView
+            android:id="@+id/action_storage"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textColor="@color/colorPrimary"
@@ -22,6 +24,7 @@
             android:text="@string/storage" />
 
         <TextView
+            android:id="@+id/action_location"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textColor="@color/colorPrimary"
@@ -30,6 +33,7 @@
             android:text="@string/location" />
 
         <TextView
+            android:id="@+id/action_camera"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textColor="@color/colorPrimary"
@@ -38,6 +42,7 @@
             android:text="@string/camera" />
 
         <TextView
+            android:id="@+id/action_phone"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textColor="@color/colorPrimary"
@@ -46,6 +51,7 @@
             android:text="@string/phone" />
 
         <TextView
+            android:id="@+id/action_contact"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textColor="@color/colorPrimary"
