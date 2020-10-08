@@ -12,7 +12,9 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Switch;
 import android.widget.TextView;
-import android.widget.Toast;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -24,15 +26,14 @@ public class MainActivity extends AppCompatActivity {
     private Switch mPhone;
     private Switch mContact;
 
-    public static final int CAMERA_PERMISSION_CODE = 100;
-    public static final int STORAGE_PERMISSION_CODE = 101;
-    public static final int PHONE_PERMISSION_CODE = 102;
-    public static final int CONTACTS_PERMISSION_CODE = 103;
+    public static final int PERMISSION_CODE = 100;
 
     public static final String CAMERA = Manifest.permission.CAMERA;
     public static final String READ_STORAGE = Manifest.permission.READ_EXTERNAL_STORAGE;
     public static final String PHONE = Manifest.permission.CALL_PHONE;
     public static final String CONTACTS = Manifest.permission.READ_CONTACTS;
+    public static final String LOCATION = Manifest.permission.ACCESS_FINE_LOCATION;
+    public static final String NO_PERMISSIONS = "NO_PERMISSIONS";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -65,6 +66,7 @@ public class MainActivity extends AppCompatActivity {
         if (permissionGrantedFor(CAMERA)) mCamera.setChecked(true);
         if (permissionGrantedFor(PHONE)) mPhone.setChecked(true);
         if (permissionGrantedFor(CONTACTS)) mContact.setChecked(true);
+        if (permissionGrantedFor(LOCATION)) mLocation.setChecked(true);
     }
 
     public void listenForSwitchesChange() {
@@ -85,7 +87,9 @@ public class MainActivity extends AppCompatActivity {
             if (isChecked || permissionGrantedFor(CONTACTS)) mContact.setChecked(true);
         });
 
-
+        mLocation.setOnCheckedChangeListener((buttonView, isChecked) -> {
+            if (isChecked || permissionGrantedFor(LOCATION)) mLocation.setChecked(true);
+        });
     }
 
     public void handleContinue (View v) {
@@ -96,39 +100,19 @@ public class MainActivity extends AppCompatActivity {
             startActivity(intent);
         }
 
-        if (mStorage.isChecked() && !permissionGrantedFor(READ_STORAGE)) {
-            checkPermission(READ_STORAGE, STORAGE_PERMISSION_CODE);
-        }
+        List<String> permissions = new ArrayList<>();
 
-        if (mCamera.isChecked() && !permissionGrantedFor(CAMERA)) {
-            checkPermission(CAMERA, CAMERA_PERMISSION_CODE);
-        }
+        if (mStorage.isChecked() && !permissionGrantedFor(READ_STORAGE)) permissions.add(READ_STORAGE);
 
-        if (mPhone.isChecked() && !permissionGrantedFor(PHONE)) {
-            checkPermission(PHONE, PHONE_PERMISSION_CODE);
-        }
+        if (mCamera.isChecked() && !permissionGrantedFor(CAMERA)) permissions.add(CAMERA);
 
-        if (mContact.isChecked() && !permissionGrantedFor(CONTACTS)) {
-            checkPermission(CONTACTS, CONTACTS_PERMISSION_CODE);
-        }
+        if (mPhone.isChecked() && !permissionGrantedFor(PHONE)) permissions.add(PHONE);
 
-        if ((mStorage.isChecked() && permissionGrantedFor(READ_STORAGE))
-                || (mCamera.isChecked() && permissionGrantedFor(CAMERA))
-                || (mPhone.isChecked() && permissionGrantedFor(PHONE))
-                || (mContact.isChecked() && permissionGrantedFor(CONTACTS))) {
-            Intent intent = new Intent(getBaseContext(), PermissionsActivity.class);
-            startActivity(intent);
-        }
-    }
+        if (mContact.isChecked() && !permissionGrantedFor(CONTACTS)) permissions.add(CONTACTS);
 
-    // Function to check and request permission
-    public void checkPermission(String permission, int requestCode) {
-        // Checking if permission is not granted
-        if (!permissionGrantedFor(permission)) {
-            ActivityCompat.requestPermissions(MainActivity.this, new String[] { permission }, requestCode);
-        } else {
-            Toast.makeText(MainActivity.this, "Permission already granted", Toast.LENGTH_SHORT).show();
-        }
+        if (mLocation.isChecked() && !permissionGrantedFor(LOCATION)) permissions.add(LOCATION);
+
+        ActivityCompat.requestPermissions(this,permissions.toArray(new String[0]), PERMISSION_CODE);
     }
 
     // This function is called when the user accepts or declines the permission.
@@ -138,45 +122,7 @@ public class MainActivity extends AppCompatActivity {
     public void onRequestPermissionsResult(int requestCode,
                                            @NonNull String[] permissions,
                                            @NonNull int[] grantResults) {
-
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-
-        boolean granted = grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED;
-
-        if (requestCode == CAMERA_PERMISSION_CODE) {
-            if (granted) {
-                // Showing the toast message
-                Toast.makeText(MainActivity.this, "Camera Permission Granted", Toast.LENGTH_SHORT).show();
-            } else {
-                mCamera.setChecked(false);
-                Toast.makeText(MainActivity.this, "Camera Permission Denied", Toast.LENGTH_SHORT).show();
-            }
-        } else if (requestCode == STORAGE_PERMISSION_CODE) {
-            if (granted) {
-                Toast.makeText(MainActivity.this, "Storage Permission Granted", Toast.LENGTH_SHORT).show();
-            }
-            else {
-                mStorage.setChecked(false);
-                Toast.makeText(MainActivity.this, "Storage Permission Denied", Toast.LENGTH_SHORT).show();
-            }
-        } else if (requestCode == PHONE_PERMISSION_CODE) {
-            if (granted) {
-                Toast.makeText(MainActivity.this, "Phone Permission Granted", Toast.LENGTH_SHORT).show();
-            }
-            else {
-                mPhone.setChecked(false);
-                Toast.makeText(MainActivity.this, "Phone Permission Denied", Toast.LENGTH_SHORT).show();
-            }
-        } else if (requestCode == CONTACTS_PERMISSION_CODE) {
-            if (granted) {
-                Toast.makeText(MainActivity.this, "Contacts Permission Granted", Toast.LENGTH_SHORT).show();
-            }
-            else {
-                mCamera.setChecked(false);
-                Toast.makeText(MainActivity.this, "Contacts Permission Denied", Toast.LENGTH_SHORT).show();
-            }
-        }
-
         Intent intent = new Intent(getBaseContext(), PermissionsActivity.class);
         startActivity(intent);
     }
