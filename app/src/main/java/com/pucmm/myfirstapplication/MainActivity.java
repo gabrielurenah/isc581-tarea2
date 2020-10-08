@@ -56,7 +56,6 @@ public class MainActivity extends AppCompatActivity {
         listenForSwitchesChange();
     }
 
-
     public boolean permissionGrantedFor(String permission) {
         return ContextCompat.checkSelfPermission(MainActivity.this, permission) == PackageManager.PERMISSION_GRANTED;
     }
@@ -76,7 +75,6 @@ public class MainActivity extends AppCompatActivity {
 
         mCamera.setOnCheckedChangeListener((buttonView, isChecked) -> {
             if (isChecked || permissionGrantedFor(CAMERA)) mCamera.setChecked(true);
-
         });
 
         mPhone.setOnCheckedChangeListener((buttonView, isChecked) -> {
@@ -98,18 +96,15 @@ public class MainActivity extends AppCompatActivity {
         if (noSwitchesAreOn) {
             Intent intent = new Intent(getBaseContext(), PermissionsActivity.class);
             startActivity(intent);
+            return;
         }
 
         List<String> permissions = new ArrayList<>();
 
         if (mStorage.isChecked() && !permissionGrantedFor(READ_STORAGE)) permissions.add(READ_STORAGE);
-
         if (mCamera.isChecked() && !permissionGrantedFor(CAMERA)) permissions.add(CAMERA);
-
         if (mPhone.isChecked() && !permissionGrantedFor(PHONE)) permissions.add(PHONE);
-
         if (mContact.isChecked() && !permissionGrantedFor(CONTACTS)) permissions.add(CONTACTS);
-
         if (mLocation.isChecked() && !permissionGrantedFor(LOCATION)) permissions.add(LOCATION);
 
         ActivityCompat.requestPermissions(this,permissions.toArray(new String[0]), PERMISSION_CODE);
